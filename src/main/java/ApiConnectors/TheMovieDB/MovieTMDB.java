@@ -1,6 +1,6 @@
-package core;
+package ApiConnectors.TheMovieDB;
 
-public record Movie(
+public record MovieTMDB(
               Integer id,
               String popularity,
               String poster_path,

@@ -1,14 +1,15 @@
 package core;
 
-import java.io.IOException;
+import ApiConnectors.TheMovieDB.ApiConnection;
+
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         ApiConnection api = new ApiConnection();
         api.connectionTestApi();
-        api.getListMovies(20);
-        api.getListImagesMoviesTop(21);
-        api.getTitlesMoviesTop(21);
+        api.getListMovies(3);
+        api.getListImagesMoviesTop(3);
+        api.getTitlesMoviesTop(3);
     }
 }
