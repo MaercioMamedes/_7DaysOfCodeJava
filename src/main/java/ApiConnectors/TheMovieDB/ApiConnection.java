@@ -1,6 +1,7 @@
 package ApiConnectors.TheMovieDB;
 
 import com.google.gson.*;
+import core.models.Movie;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -22,6 +24,10 @@ public class ApiConnection {
     private static final String urlTopMovie = "https://api.themoviedb.org/3/movie/top_rated?language=pt-BR&page=";
     Dotenv dotenv = Dotenv.load();
     private final String token = dotenv.get("webToken");
+
+    public static String getUrlImageBase(String s) {
+        return urlImageBase;
+    }
 
     public void connectionTestApi(){
         /*
@@ -73,13 +79,15 @@ public class ApiConnection {
         return listMovies;
     }
 
-    public void getListMovies(Integer topNumber){
+
+    public List<Movie> getListMovies(Integer topNumber){
         /*
             Método para retornar lista de Filmes
          */
 
         int count = 1;
         Integer page = 0;
+        List<Movie> listMoviesModel = new ArrayList<>();
 
         try{
             do {
@@ -93,14 +101,18 @@ public class ApiConnection {
                         System.out.println("Filme: " + count);
                         MovieTMDB movieTMDB = gson.fromJson(jsonElement, MovieTMDB.class);
                         System.out.println(movieTMDB);
+                        Movie movie = new Movie(movieTMDB);
+                        listMoviesModel.add(movie);
+                        //System.out.println(movie);
                         count++;
                     }
                 }
             } while (count <= topNumber);
 
         } catch (Exception e){
-            System.out.println(e + "\nFalha ao acessar API");
+            System.out.println(Arrays.toString(e.getStackTrace()) + "\nFalha ao acessar API");
         }
+        return listMoviesModel;
     }
 
     public void getListImagesMoviesTop(int topNumber) {
@@ -135,6 +147,10 @@ public class ApiConnection {
         } catch (Exception e) {
             System.out.println(e + "\nFalha ao acessar API");
         }
+    }
+    
+    public static String getFullUrlImage(String urlImagePath){
+        return urlImageBase + urlImagePath.trim().replaceAll("^\"|\"$", "");
     }
     public void getTitlesMoviesTop(int topNumber) {
         /*
